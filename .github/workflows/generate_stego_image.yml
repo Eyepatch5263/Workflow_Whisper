@@ -3,7 +3,7 @@ name: Generate Stego Image
 on:
     push:
         branches:
-            - main
+            - right_here
 
 jobs:
     build:
