@@ -1,32 +1,37 @@
 name: Generate Stego Image
 
 on:
-  push:
-    branches:
-      - right_here
+    push:
+        branches:
+            - right_here
 
 jobs:
-  build:
-    environment: secrets
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-      - name: Install dependencies
-        run: pip install pillow stegano
-      - name: Debug secret presence
-        run: |
-          if [ -z "$HIDDEN_SECRET" ]; then
-            echo "HIDDEN_SECRET is empty"
-          else
-            echo "HIDDEN_SECRET is set"
-          fi
-        env:
-          HIDDEN_SECRET: ${{ secrets.IS_THIS_A_NEXT_CLUE }}
-      - name: Generate image with hidden secret
-        env:
-          HIDDEN_SECRET: ${{ secrets.IS_THIS_A_NEXT_CLUE }}
-        run: python scripts/generate_stego_image.py
+    build:
+        environment: secrets
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.x"
+            - name: Install dependencies
+              run: pip install pillow stegano
+            - name: Debug secret presence
+              run: |
+                  if [ -z "$HIDDEN_SECRET" ]; then
+                    echo "HIDDEN_SECRET is empty"
+                  else
+                    echo "HIDDEN_SECRET is set"
+                  fi
+              env:
+                  HIDDEN_SECRET: ${{ secrets.IS_THIS_A_NEXT_CLUE }}
+            - name: Generate image with hidden secret
+              env:
+                  HIDDEN_SECRET: ${{ secrets.IS_THIS_A_NEXT_CLUE }}
+              run: python scripts/generate_stego_image.py
+            - name: Upload stego image artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: stego-image
+                  path: stego.png
